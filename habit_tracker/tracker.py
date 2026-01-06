@@ -1,37 +1,46 @@
-def leetcode():
-    print("TODO: Leetcode")
-
-def gym():
-    print("TODO: Gym")
-
-def internships():
-    print("TODO: Apply for internships")
-
-def study():
-    print("TODO: Study")
+def add_habit():
+    print("TODO: add_habit()")
 
 
-check = True
-while check:
-    choice = input(
-        "\nLeetcode (1)\n"
-        "Gym (2)\n"
-        "Apply for Internships (3)\n"
-        "Study (4)\n"
-        "Quit (5)\n"
-        "Enter: "
-    ).strip()
+def list_habits():
+    print("TODO: mark_done()")
 
-    if choice == "1":
-        leetcode()
-    elif choice == "2":
-        gym()
-    elif choice == "3":
-        internships()
-    elif choice == "4":
-        study()
-    elif choice == "5":
-        check = False
-        print("Goodbye!")
-    else:
-        print("Invalid choice. Please enter 1–5.")
+
+def mark_done():
+    print("TODO: mark_done()")
+
+
+def show_streaks():
+    print("TODO: show_streaks()")
+
+
+def main():
+    running = True
+
+    while running:
+        print("\n=== Habit Tracker ===")
+        print("1) Add habit")
+        print("2) List habits")
+        print("3) Mark habit done today")
+        print("4) Show streaks")
+        print("5) Quit")
+
+        choice = input("Enter (1–5): ").strip()
+
+        if choice == "1":
+            add_habit()
+        elif choice == "2":
+            list_habits()
+        elif choice == "3":
+            mark_done()
+        elif choice == "4":
+            show_streaks()
+        elif choice == "5":
+            running = False
+            print("Goodbye!")
+        else:
+            print("Invalid choice. Please enter 1–5.")
+
+
+if __name__ == "__main__":
+    main()
