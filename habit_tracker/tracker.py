@@ -1,9 +1,27 @@
+habits = []
 def add_habit():
-    print("TODO: add_habit()")
-
+    not_dupe=True
+    new_habbit = input("\nAdd habbit name: ")
+    if not new_habbit:
+        print("No empty habbits")
+    else:
+        for i in habits:
+            if (i.lower() == new_habbit.lower()):
+                print("No duplicate habbits")
+                new_habbit=""
+                not_dupe=False
+                break
+        if not_dupe:
+            habits.append(new_habbit)
 
 def list_habits():
-    print("TODO: mark_done()")
+    count = 1
+    if len(habits)==0:
+        print("No habits currently, you can add habits by pressing 1")
+    else:
+        for habit in habits:
+            print(f"{count}. {habit}")
+            count+=1
 
 
 def mark_done():
