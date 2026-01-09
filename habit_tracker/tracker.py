@@ -1,18 +1,26 @@
-habits = []
+import json
+from pathlib import Path
+
+DATA_FILE = Path("data.json")
+habits=[]
+
 def add_habit():
     not_dupe=True
-    new_habbit = input("\nAdd habbit name: ")
+    new_habbit = input("\nAdd habbit name: ").strip()
     if not new_habbit:
         print("No empty habbits")
-    else:
-        for i in habits:
-            if (i.lower() == new_habbit.lower()):
-                print("No duplicate habbits")
-                new_habbit=""
-                not_dupe=False
-                break
-        if not_dupe:
-            habits.append(new_habbit)
+        return
+    
+    for i in habits:
+        if (i.lower() == new_habbit.lower()):
+            print("No duplicate habbits")
+            new_habbit=""
+            not_dupe=False
+            break
+
+    if not_dupe:
+        habits.append(new_habbit)
+        print(f"Added: {new_habbit}")
 
 def list_habits():
     count = 1
@@ -23,7 +31,18 @@ def list_habits():
             print(f"{count}. {habit}")
             count+=1
 
+def load_data():
+    if not DATA_FILE.exists():
+        return {"habits": []}
+    
+    with open(DATA_FILE, "r") as f:
+        return json.load(f)
+      
 
+def save_data(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+        
 def mark_done():
     print("TODO: mark_done()")
 
@@ -34,6 +53,10 @@ def show_streaks():
 
 def main():
     running = True
+
+    data=load_data()
+    global habits
+    habits=data["habits"]
 
     while running:
         print("\n=== Habit Tracker ===")
@@ -47,6 +70,8 @@ def main():
 
         if choice == "1":
             add_habit()
+            data["habits"]=habits
+            save_data(data)
         elif choice == "2":
             list_habits()
         elif choice == "3":
