@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from datetime import date
 
 DATA_FILE = Path("data.json")
 habits=[]
@@ -8,18 +9,21 @@ def add_habit():
     not_dupe=True
     new_habbit = input("\nAdd habbit name: ").strip()
     if not new_habbit:
-        print("No empty habbits")
+        print("No empty habits")
         return
     
     for i in habits:
-        if (i.lower() == new_habbit.lower()):
+        if (i['name'].lower() == new_habbit.lower()):
             print("No duplicate habbits")
             new_habbit=""
             not_dupe=False
             break
 
     if not_dupe:
-        habits.append(new_habbit)
+        habits.append({
+            "name": new_habbit,
+            "completions": []
+        })
         print(f"Added: {new_habbit}")
 
 def list_habits():
@@ -27,9 +31,10 @@ def list_habits():
     if len(habits)==0:
         print("No habits currently, you can add habits by pressing 1")
     else:
-        for habit in habits:
-            print(f"{count}. {habit}")
-            count+=1
+        print("\n")
+        for count, habit in enumerate(habits, start=1):
+            print(f"{count}. {habit['name']}")
+
 
 def load_data():
     if not DATA_FILE.exists():
@@ -44,8 +49,28 @@ def save_data(data):
         json.dump(data, f, indent=2)
         
 def mark_done():
-    print("TODO: mark_done()")
+    if not habits:
+        print("No habits currently")
+        return
+    
+    list_habits()
+    choice = input("Select habit number: ").strip()
 
+    try:
+        idx = int(choice) - 1
+        habit = habits[idx]
+    except (ValueError, IndexError):
+        print("Invalid selection.")
+        return
+    
+    today = date.today().isoformat()
+
+    if today in habit["completions"]:
+        print("Already marked done today.")
+        return
+    
+    habit["completions"].append(today)
+    print(f"Marked '{habit['name']}' done for {today}.")
 
 def show_streaks():
     print("TODO: show_streaks()")
@@ -76,6 +101,8 @@ def main():
             list_habits()
         elif choice == "3":
             mark_done()
+            data["habits"] = habits
+            save_data(data)
         elif choice == "4":
             show_streaks()
         elif choice == "5":
