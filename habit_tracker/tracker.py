@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from datetime import date
+from datetime import date, timedelta
 
 DATA_FILE = Path("data.json")
 habits=[]
@@ -72,8 +72,33 @@ def mark_done():
     habit["completions"].append(today)
     print(f"Marked '{habit['name']}' done for {today}.")
 
+def compute_streak(completions):
+    if not completions:
+        return 0
+    
+    completed_dates = set(
+        date.fromisoformat(d) for d in completions
+    )
+
+    today=date.today()
+
+    if today not in completed_dates:
+        return 0
+    
+    streak=0
+    current_day=today
+
+    while current_day in completed_dates:
+        streak+=1
+        current_day-=timedelta(days=1)
+
+    return streak
+
+
 def show_streaks():
-    print("TODO: show_streaks()")
+    for habit in habits:
+        streak = compute_streak(habit["completions"])
+        print(f"{habit['name']}: {streak}-day streak")
 
 
 def main():
