@@ -63,8 +63,8 @@ def list_habits():
             else:
                 status = "❌ Not done"
 
-            print(f"{count}. {habit['name']}")
-            
+            print(f"{count}. {habit['name']} {status}")
+
 
 def load_data():
     if not DATA_FILE.exists():
