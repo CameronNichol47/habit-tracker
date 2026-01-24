@@ -49,7 +49,6 @@ def remove_habit():
     habits.pop(idx)
 
 def list_habits():
-    count = 1
 
     today = date.today().isoformat()
 
@@ -169,6 +168,10 @@ def rename_habit():
     if not choice.isdigit():
         print("Invalid selection.")
         return
+    
+    if not new_name:
+        print("Name cannot be empty.")
+        return
 
     idx = int(choice) - 1
 
@@ -216,9 +219,11 @@ def main():
             save_data(data)
         elif choice == "6":
             undo_today()
+            data["habits"] = habits
             save_data(data)
         elif choice == "7":
             rename_habit()
+            data["habits"] = habits
             save_data(data)
         elif choice == "8":
             running = False
