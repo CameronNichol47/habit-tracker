@@ -128,12 +128,55 @@ def compute_streak(completions):
 
     return streak
 
-
 def show_streaks():
     for habit in habits:
         streak = compute_streak(habit["completions"])
         print(f"{habit['name']}: {streak}-day streak")
 
+def undo_today():
+    if not habits:
+        print("No habits to undo.")
+        return
+
+    list_habits()
+    choice = input("\nChoose a habit to undo today: ").strip()
+
+    if not choice.isdigit():
+        print("Invalid selection.")
+        return
+
+    idx = int(choice) - 1
+    if idx < 0 or idx >= len(habits):
+        print("Invalid selection.")
+        return
+
+    habit = habits[idx]
+    today = date.today().isoformat()
+
+    if today not in habit["completions"]:
+        print(f"{habit['name']} was not marked today.")
+        return
+
+    habit["completions"].remove(today)
+    print(f"Undo successful for '{habit['name']}'.")
+
+def rename_habit():
+    list_habits()
+
+    choice = input("\nChoose the habit (number) you want to rename: ")
+    new_name = input("\nEnter the new name: ")
+
+    if not choice.isdigit():
+        print("Invalid selection.")
+        return
+
+    idx = int(choice) - 1
+
+    if idx < 0 or idx >= len(habits):
+        print("Invalid selection.")
+        return
+    
+    habits[idx]["name"] = new_name
 
 def main():
     running = True
@@ -149,9 +192,11 @@ def main():
         print("3) Mark habit done today")
         print("4) Show streaks")
         print("5) Remove habit")
-        print("6) Quit")
+        print("6) Undo habit today")
+        print("7) Rename habit")
+        print("8) Quit")
 
-        choice = input("Enter (1–6): ").strip()
+        choice = input("Enter (1–8): ").strip()
 
         if choice == "1":
             add_habit()
@@ -170,10 +215,16 @@ def main():
             data["habits"] = habits
             save_data(data)
         elif choice == "6":
+            undo_today()
+            save_data(data)
+        elif choice == "7":
+            rename_habit()
+            save_data(data)
+        elif choice == "8":
             running = False
             print("Goodbye!")
         else:
-            print("Invalid choice. Please enter 1–6.")
+            print("Invalid choice. Please enter 1–8.")
 
 
 if __name__ == "__main__":
