@@ -160,26 +160,35 @@ def undo_today():
     print(f"Undo successful for '{habit['name']}'.")
 
 def rename_habit():
-    list_habits()
+    if not habits:
+        print("No habits to rename.")
+        return
 
-    choice = input("\nChoose the habit (number) you want to rename: ")
-    new_name = input("\nEnter the new name: ")
+    list_habits()
+    choice = input("\nChoose the habit (number) you want to rename: ").strip()
 
     if not choice.isdigit():
         print("Invalid selection.")
         return
-    
+
+    idx = int(choice) - 1
+    if idx < 0 or idx >= len(habits):
+        print("Invalid selection.")
+        return
+
+    new_name = input("Enter the new name: ").strip()
     if not new_name:
         print("Name cannot be empty.")
         return
 
-    idx = int(choice) - 1
+    for i, h in enumerate(habits):
+        if i != idx and h["name"].lower() == new_name.lower():
+            print("A habit with that name already exists.")
+            return
 
-    if idx < 0 or idx >= len(habits):
-        print("Invalid selection.")
-        return
-    
+    old_name = habits[idx]["name"]
     habits[idx]["name"] = new_name
+    print(f"Renamed '{old_name}' → '{new_name}'.")
 
 def main():
     running = True
